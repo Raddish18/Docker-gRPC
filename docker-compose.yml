@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  product-service:
+    build: ./analysis
+    volumes:
+      - ./analysis:/usr/src/app
+    ports:
+      - "5001:80"
+  website:
+    image: php:apache
+    volumes:
+      - ./website:/var/www/html
+    ports:
+      - "5000:80"
+    depends_on:
+      - product-service
+  database-service:
+    build: ./database
+    volumes:
+      - ./database:/usr/src/app
+    ports:
+      - "5002:80"
+  redis:
+    image: redis:alpine
+    ports: 
+      - "6379:6379"
+  email-service:
+    build: ./email
+    volumes:
+      - ./email:/usr/src/app
+    ports:
+      - "5003:80"
